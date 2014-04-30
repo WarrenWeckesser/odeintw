@@ -1,3 +1,6 @@
+# Copyright (c) 2014, Warren Weckesser
+# All rights reserved.
+# See the LICENSE file for license information.
 
 import numpy as np
 from numpy.testing import (assert_allclose, assert_array_equal,
