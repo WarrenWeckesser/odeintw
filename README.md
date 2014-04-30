@@ -97,7 +97,7 @@ implementation of the Jacobian:
         jac[1, 1, 0, 1] = c[1, 0]
         jac[1, 1, 1, 1] = c[1, 1]
 
-(As with `odeintw`, giving an explicit Jacobian is optional.)
+(As with `odeint`, giving an explicit Jacobian is optional.)
 
 Now create the arguments and call `odeint`:
 
