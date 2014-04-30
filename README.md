@@ -119,7 +119,7 @@ Now create the arguments and call `odeint`:
 
 The solution can be plotted with `matplotlib`:
 
-    from matplotlib.pyplot import plt
+    import matplotlib.pyplot as plt
 
     plt.plot(t, sol.reshape(-1, 4))
     plt.legend(['a[0,0]', 'a[0,1]', 'a[1,0]', 'a[1,1]'], loc='best')
