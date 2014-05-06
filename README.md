@@ -99,7 +99,7 @@ implementation of the Jacobian:
 
 (As with `odeint`, giving an explicit Jacobian is optional.)
 
-Now create the arguments and call `odeint`:
+Now create the arguments and call `odeintw`:
 
     # The matrix of coefficients `c`.  This is passed as an
     # extra argument to `asys` and `ajac`.
