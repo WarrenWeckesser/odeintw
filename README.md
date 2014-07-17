@@ -20,7 +20,7 @@ To solve the equations
     dz1/dt = -z1 * (K - z2)
     dz2/dt = L - M*z2
 
-where `K`, `L` and `M` are (possible complex) constants, we first define the
+where `K`, `L` and `M` are (possibly complex) constants, we first define the
 right-hand-side of the differential equations::
 
     def zfunc(z, t, K, L, M):
