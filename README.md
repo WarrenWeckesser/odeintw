@@ -63,6 +63,8 @@ The components of the solution can be plotted with `matplotlib` as follows
     plt.legend(loc='best')
     plt.show()
 
+Plot:
+![](https://github.com/WarrenWeckesser/odeintw/blob/master/examples/odeintw_example1.png)
 
 Example 2
 ---------
@@ -125,6 +127,9 @@ The solution can be plotted with `matplotlib`:
     plt.legend(['a[0,0]', 'a[0,1]', 'a[1,0]', 'a[1,1]'], loc='best')
     plt.grid(True)
     plt.show()
+
+Plot:
+![](https://github.com/WarrenWeckesser/odeintw/blob/master/examples/odeintw_example1.png)
 
 
 *Copyright (c) 2014, Warren Weckesser*
