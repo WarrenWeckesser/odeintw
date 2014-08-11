@@ -129,7 +129,7 @@ The solution can be plotted with `matplotlib`:
     plt.show()
 
 Plot:
-![](https://github.com/WarrenWeckesser/odeintw/blob/master/examples/odeintw_example1.png)
+![](https://github.com/WarrenWeckesser/odeintw/blob/master/examples/odeintw_example2.png)
 
 
 *Copyright (c) 2014, Warren Weckesser*
