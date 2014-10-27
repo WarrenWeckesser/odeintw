@@ -6,6 +6,15 @@ import numpy as np
 from scipy.integrate import odeint
 
 
+# Tuple holding the major and minor versions of numpy.
+_NUMPY_VERSION = tuple(int(d) for d in np.__version__.split('.')[:2])
+
+if _NUMPY_VERSION >= (1, 7):
+    _astype_kwargs = {'copy': False}
+else:
+    _astype_kwargs = {}
+
+
 def _check_args(kwargs):
     """
     Check for arguments that are not supported with array differential
@@ -165,7 +174,7 @@ def odeintw(func, y0, t, **kwargs):
             jacfunc1 = None
 
     if not np.iscomplexobj(y0):
-        y0 = y0.astype(np.float64, copy=False)
+        y0 = y0.astype(np.float64, **_astype_kwargs)
         func2 = func1
         jacfunc2 = jacfunc1
     else:
@@ -177,7 +186,7 @@ def odeintw(func, y0, t, **kwargs):
         kwargs['mu'] = None if mu is None else 1 + 2*mu
 
         # Cast y0 to np.complex128.
-        y0 = y0.astype(np.complex128, copy=False)
+        y0 = y0.astype(np.complex128, **_astype_kwargs)
 
         # realfunc is a wrapper of the user's function that can be
         # used by odeint.
