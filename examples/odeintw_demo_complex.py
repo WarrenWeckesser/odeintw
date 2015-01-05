@@ -6,9 +6,8 @@
 import numpy as np
 from scipy.integrate import odeint
 
-import odeintw
-reload(odeintw)
-from odeintw import odeintw, _complex_to_real_jac
+from odeintw import odeintw
+from odeintw._odeintw import _complex_to_real_jac
 
 
 def func(y, t, c):
