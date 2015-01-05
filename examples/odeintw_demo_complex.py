@@ -2,6 +2,7 @@
 # All rights reserved.
 # See the LICENSE file for license information.
 
+from __future__ import print_function
 
 import numpy as np
 from scipy.integrate import odeint
@@ -36,8 +37,8 @@ c = np.array([[-20+1j, 5-1j,      0,       0],
               [     0, -0.1,  1+2.5j,      0],
               [     0,    0,      -1,    0.5],
               [     0,    0,       0,  -5+10j]])
-print c
-print
+print(c)
+print()
 
 z0 = np.arange(1,5.0) + 0.5j
 
@@ -46,27 +47,27 @@ t = np.linspace(0, 250, 11)
 common_kwargs = dict(args=(c,), full_output=True, atol=1e-12, rtol=1e-10, mxstep=1000)
 
 sol0, info0 = odeintw(funcz, z0, t, Dfun=jac, **common_kwargs)
-print info0['nje']
+print(info0['nje'])
 
 rargs = common_kwargs.copy()
 rargs.pop('args')
 
 x0 = z0.view(np.float64)
 solr, infor = odeint(func, x0, t, Dfun=jac, args=(_complex_to_real_jac(c),), **rargs)
-print infor['nje']
+print(infor['nje'])
 
-print "-----"
+print("-----")
 
 solbnj, infobnj = odeintw(func, z0, t, ml=0, mu=1, **common_kwargs)
-print infobnj['nje']
+print(infobnj['nje'])
 
 sol2, info2 = odeint(func, x0, t, ml=1, mu=3, args=(_complex_to_real_jac(c),), **rargs)
-print info2['nje']
+print(info2['nje'])
 
-print "-----"
+print("-----")
 
 sol1, info1 = odeintw(func, z0, t, Dfun=bjac_cols, ml=0, mu=1, col_deriv=True, **common_kwargs)
-print info1['nje']
+print(info1['nje'])
 
 sol2, info2 = odeintw(func, z0, t, Dfun=bjac_rows, ml=0, mu=1, **common_kwargs)
-print info2['nje']
+print(info2['nje'])
