@@ -48,16 +48,19 @@ The following calls `odeintw` with appropriate arguments
     M = 2.5
 
     # Call odeintw
-    z, infodict = odeintw(zfunc, z0, t, args=(K,L,M), Dfun=zjac, full_output=True)
+    z, infodict = odeintw(zfunc, z0, t, args=(K, L, M), Dfun=zjac,
+                          full_output=True)
 
 The components of the solution can be plotted with `matplotlib` as follows
 
     import matplotlib.pyplot as plt
 
-    plt.plot(t, z[:,0].real, label='z1.real')
-    plt.plot(t, z[:,0].imag, label='z1.imag')
-    plt.plot(t, z[:,1].real, label='z2.real')
-    plt.plot(t, z[:,1].imag, label='z2.imag')
+    color1 = (0.5, 0.4, 0.3)
+    color2 = (0.2, 0.2, 1.0)
+    plt.plot(t, z[:, 0].real, color=color1, label='z1.real', linewidth=1.5)
+    plt.plot(t, z[:, 0].imag, '--', color=color1, label='z1.imag', linewidth=2)
+    plt.plot(t, z[:, 1].real, color=color2, label='z2.real', linewidth=1.5)
+    plt.plot(t, z[:, 1].imag, '--', color=color2, label='z2.imag', linewidth=2)
     plt.xlabel('t')
     plt.grid(True)
     plt.legend(loc='best')
