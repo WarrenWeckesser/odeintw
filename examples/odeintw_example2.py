@@ -15,12 +15,13 @@ from odeintw import odeintw
 def asys(a, t, c):
     return c.dot(a)
 
+
 def ajac(a, t, c):
     # asys returns [[F[0,0](a,t), F[0,1](a,t),
     #                F[1,0](a,t), F[1,1](a,t)]]
     # This function computes jac[m, n, i, j]
     # jac[m, n, i, j] holds dF[m,n]/da[i,j]
-    jac = np.zeros((2,2,2,2))
+    jac = np.zeros((2, 2, 2, 2))
     jac[0, 0, 0, 0] = c[0, 0]
     jac[0, 0, 1, 0] = c[0, 1]
     jac[0, 1, 0, 1] = c[0, 0]
@@ -35,6 +36,7 @@ def ajac(a, t, c):
 c = np.array([[-0.5, -1.25],
               [ 0.5, -0.25]])
 t = np.linspace(0, 10, 201)
+
 # a0 is the initial condition.
 a0 = np.array([[0.0, 1.0],
                [2.0, 3.0]])
@@ -43,7 +45,12 @@ sol = odeintw(asys, a0, t, Dfun=ajac, args=(c,))
 
 plt.figure(1)
 plt.clf()
-plt.plot(t, sol.reshape(-1, 4))
-plt.legend(['a[0,0]', 'a[0,1]', 'a[1,0]', 'a[1,1]'], loc='best')
+color1 = (0.5, 0.4, 0.3)
+color2 = (0.2, 0.2, 1.0)
+plt.plot(t, sol[:, 0, 0], color=color1, label='a[0,0]')
+plt.plot(t, sol[:, 0, 1], color=color2, label='a[0,1]')
+plt.plot(t, sol[:, 1, 0], '--', color=color1, linewidth=1.5, label='a[1,0]')
+plt.plot(t, sol[:, 1, 1], '--', color=color2, linewidth=1.5, label='a[1,1]')
+plt.legend(loc='best')
 plt.grid(True)
 plt.show()

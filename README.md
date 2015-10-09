@@ -126,8 +126,15 @@ The solution can be plotted with `matplotlib`:
 
     import matplotlib.pyplot as plt
 
-    plt.plot(t, sol.reshape(-1, 4))
-    plt.legend(['a[0,0]', 'a[0,1]', 'a[1,0]', 'a[1,1]'], loc='best')
+    plt.figure(1)
+    plt.clf()
+    color1 = (0.5, 0.4, 0.3)
+    color2 = (0.2, 0.2, 1.0)
+    plt.plot(t, sol[:, 0, 0], color=color1, label='a[0,0]')
+    plt.plot(t, sol[:, 0, 1], color=color2, label='a[0,1]')
+    plt.plot(t, sol[:, 1, 0], '--', color=color1, linewidth=1.5, label='a[1,0]')
+    plt.plot(t, sol[:, 1, 1], '--', color=color2, linewidth=1.5, label='a[1,1]')
+    plt.legend(loc='best')
     plt.grid(True)
     plt.show()
 
@@ -135,7 +142,7 @@ Plot:
 ![](https://github.com/WarrenWeckesser/odeintw/blob/master/examples/odeintw_example2.png)
 
 
-*Copyright (c) 2014, Warren Weckesser*
+*Copyright (c) 2015, Warren Weckesser*
 
 All rights reserved.
 See the LICENSE file for license information.
