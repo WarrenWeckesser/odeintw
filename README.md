@@ -83,8 +83,8 @@ The differential equation is defined with the function
     def asys(a, t, c):
         return c.dot(a)
 
-Both `a` and `c` are assumed to be `n x n` matrices.  This function
-will work with for any `n`, but we'll specialize to `2 x 2` in our
+Both `a` and `c` are assumed to be `n x n` matrices.  The function
+`asys` will work for any `n`, but we'll specialize to `2 x 2` in our
 implementation of the Jacobian:
 
     def ajac(a, t, c):
