@@ -49,10 +49,10 @@ def _complex_to_real_jac(jac):
         [6  5  8  7]
     """
     real_jac = np.empty((2*jac.shape[0], 2*jac.shape[1]))
-    real_jac[::2,   ::2] = jac.real
+    real_jac[0::2, 0::2] = jac.real
     real_jac[1::2, 1::2] = jac.real
-    real_jac[::2,  1::2] = -jac.imag
-    real_jac[1::2,  ::2] = jac.imag
+    real_jac[0::2, 1::2] = -jac.imag
+    real_jac[1::2, 0::2] = jac.imag
     return real_jac
 
 
@@ -70,7 +70,7 @@ def _transform_banded_jac(bjac):
     """
     # Shift every other column.
     newjac = np.zeros((bjac.shape[0] + 1, bjac.shape[1]))
-    newjac[1:,::2] = bjac[:, ::2]
+    newjac[1:, ::2] = bjac[:, ::2]
     newjac[:-1, 1::2] = bjac[:, 1::2]
     return newjac
 
@@ -211,7 +211,7 @@ def odeintw(func, y0, t, **kwargs):
                     # by jacfunc1, and continue as if col_deriv was False.
                     jac = jac.T
                 # Convert jac to real_jac, an array in which each complex value
-                # a + i*b in jac is expanded to the 2x2 array [[a, -b], [b, a]].
+                # a+i*b in jac is expanded to the 2x2 array [[a, -b], [b, a]].
                 real_jac = _complex_to_real_jac(jac)
                 if ml is not None or mu is not None:
                     # Banded; shift every other column up one.
