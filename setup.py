@@ -16,8 +16,8 @@ def get_odeintw_version():
 
         __version__ = "version-string"
 
-    in odeintw/__init__.py.  It returns the string version-string, or None if such a
-    line is not found.
+    in odeintw/__init__.py.  It returns the string version-string, or None if
+    such a line is not found.
     """
     with open(path.join("odeintw", "__init__.py"), "r") as f:
         for line in f:
@@ -29,10 +29,9 @@ def get_odeintw_version():
 _descr = ('Solve complex and matrix differential equations '
           'with scipy.integrate.odeint.')
 
-setup(name='odeintw', 
+setup(name='odeintw',
       version=get_odeintw_version(),
       description=_descr,
       author='Warren Weckesser',
       url='https://github.com/WarrenWeckesser/odeintw',
-      packages=['odeintw', 'odeintw.tests'],
-)
+      packages=['odeintw', 'odeintw.tests'])

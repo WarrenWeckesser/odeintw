@@ -33,6 +33,7 @@ def ajac(a, t, c):
 
     return jac
 
+
 c = np.array([[-0.5, -1.25],
               [ 0.5, -0.25]])
 t = np.linspace(0, 10, 201)
