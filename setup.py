@@ -29,9 +29,28 @@ def get_odeintw_version():
 _descr = ('Solve complex and matrix differential equations '
           'with scipy.integrate.odeint.')
 
+_long_descr = """
+odeintw
+=======
+
+`odeintw` provides a wrapper of `scipy.integrate.odeint` that allows it to
+handle complex and matrix differential equations.  That is, it can solve
+equations of the form
+
+    dZ/dt = F(Z, t, param1, param2, ...)
+
+where `t` is real and `Z` is a real or complex array.
+
+Since `odeintw` is just a wrapper of `scipy.integrate.odeint`, it requires
+`scipy` to be installed.
+
+See README.md at https://github.com/WarrenWeckesser/odeintw for examples.
+"""
+
 setup(name='odeintw',
       version=get_odeintw_version(),
       description=_descr,
+      long_description=_long_descr,
       author='Warren Weckesser',
       url='https://github.com/WarrenWeckesser/odeintw',
       packages=['odeintw', 'odeintw.tests'],
