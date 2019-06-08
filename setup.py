@@ -5,7 +5,7 @@
 # See the LICENSE file for license information.
 
 from os import path
-from distutils.core import setup
+from setuptools import setup
 
 
 def get_odeintw_version():
@@ -34,4 +34,13 @@ setup(name='odeintw',
       description=_descr,
       author='Warren Weckesser',
       url='https://github.com/WarrenWeckesser/odeintw',
-      packages=['odeintw', 'odeintw.tests'])
+      packages=['odeintw', 'odeintw.tests'],
+      classifiers=[
+          "Programming Language :: Python :: 2.7",
+          "Programming Language :: Python :: 3",
+          "License :: OSI Approved :: BSD License",
+          "Operating System :: OS Independent",
+      ],
+      keywords="scipy odeint",
+      install_requires=['scipy'],
+)
