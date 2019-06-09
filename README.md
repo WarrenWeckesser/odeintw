@@ -12,6 +12,9 @@ where `t` is real and `Z` is a real or complex array.
 Since `odeintw` is just a wrapper of `scipy.integrate.odeint`, it requires
 `scipy` to be installed.
 
+`odeintw` is available on PyPI: https://pypi.org/project/odeintw/
+
+
 Example 1
 ---------
 
@@ -69,6 +72,7 @@ The components of the solution can be plotted with `matplotlib` as follows
 Plot:
 
 ![](https://github.com/WarrenWeckesser/odeintw/blob/master/examples/odeintw_example1.png)
+
 
 Example 2
 ---------
