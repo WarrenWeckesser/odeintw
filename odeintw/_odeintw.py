@@ -139,6 +139,7 @@ def odeintw(func, y0, t, **kwargs):
     """
 
     full_output = kwargs.get('full_output', False)
+    tfirst = kwargs.get('tfirst', False)
     Dfun = kwargs.pop('Dfun', None)
 
     y0 = np.atleast_1d(y0)
@@ -155,19 +156,31 @@ def odeintw(func, y0, t, **kwargs):
         # by odeint.
         y0 = y0.ravel()
 
-        def vecfunc(y, t, *args):
-            a = y.reshape(shape)
-            dadt = func(a, t, *args)
-            return np.asarray(dadt).ravel()
+        if tfirst:
+            def vecfunc(t, y, *args):
+                a = y.reshape(shape)
+                dadt = func(t, a, *args)
+                return np.asarray(dadt).ravel()
+        else:
+            def vecfunc(y, t, *args):
+                a = y.reshape(shape)
+                dadt = func(a, t, *args)
+                return np.asarray(dadt).ravel()
 
         func1 = vecfunc
 
         if Dfun is not None:
 
-            def jacfunc(y, t, *args):
-                a = y.reshape(shape)
-                jac = Dfun(a, t, *args)
-                return np.asarray(jac).reshape(y0.size, y0.size)
+            if tfirst:
+                def jacfunc(t, y, *args):
+                    a = y.reshape(shape)
+                    jac = Dfun(t, a, *args)
+                    return np.asarray(jac).reshape(y0.size, y0.size)
+            else:
+                def jacfunc(y, t, *args):
+                    a = y.reshape(shape)
+                    jac = Dfun(a, t, *args)
+                    return np.asarray(jac).reshape(y0.size, y0.size)
 
             jacfunc1 = jacfunc
         else:
@@ -190,33 +203,59 @@ def odeintw(func, y0, t, **kwargs):
 
         # realfunc is a wrapper of the user's function that can be
         # used by odeint.
-        def realfunc(y, t, *args):
-            z = y.view(np.complex128)
-            dzdt = func1(z, t, *args)
-            # func might return a python list, so convert its return
-            # value to an array with type np.complex128, and then return
-            # a np.float64 view of that array.
-            dydt = np.asarray(dzdt, dtype=np.complex128).view(np.float64)
-            return dydt
+        if tfirst:
+            def realfunc(t, y, *args):
+                z = y.view(np.complex128)
+                dzdt = func1(t, z, *args)
+                # func1 might return a python list, or a scalar, so convert its
+                # return value to an array that is at lead 1-d, with type
+                # np.complex128, and then return a np.float64 view of that array.
+                dydt = np.atleast_1d(dzdt).astype(np.complex128).view(np.float64)
+                return dydt
+        else:
+            def realfunc(y, t, *args):
+                z = y.view(np.complex128)
+                dzdt = func1(z, t, *args)
+                # func1 might return a python list, or a scalar, so convert its
+                # return value to an array that is at lead 1-d, with type
+                # np.complex128, and then return a np.float64 view of that array.
+                dydt = np.atleast_1d(dzdt).astype(np.complex128).view(np.float64)
+                return dydt
 
         func2 = realfunc
 
         if jacfunc1 is not None:
 
-            def jacfuncz(y, t, *args):
-                z = y.view(np.complex128)
-                jac = jacfunc1(z, t, *args)
-                if col_deriv:
-                    # If col_deriv is True, transpose the result returned
-                    # by jacfunc1, and continue as if col_deriv was False.
-                    jac = jac.T
-                # Convert jac to real_jac, an array in which each complex value
-                # a+i*b in jac is expanded to the 2x2 array [[a, -b], [b, a]].
-                real_jac = _complex_to_real_jac(jac)
-                if ml is not None or mu is not None:
-                    # Banded; shift every other column up one.
-                    real_jac = _transform_banded_jac(real_jac)
-                return real_jac
+            if tfirst:
+                def jacfuncz(t, y, *args):
+                    z = y.view(np.complex128)
+                    jac = jacfunc1(t, z, *args)
+                    if col_deriv:
+                        # If col_deriv is True, transpose the result returned
+                        # by jacfunc1, and continue as if col_deriv was False.
+                        jac = jac.T
+                    # Convert jac to real_jac, an array in which each complex value
+                    # a+i*b in jac is expanded to the 2x2 array [[a, -b], [b, a]].
+                    real_jac = _complex_to_real_jac(jac)
+                    if ml is not None or mu is not None:
+                        # Banded; shift every other column up one.
+                        real_jac = _transform_banded_jac(real_jac)
+                    return real_jac
+            else:
+                def jacfuncz(y, t, *args):
+                    z = y.view(np.complex128)
+                    jac = jacfunc1(z, t, *args)
+                    if col_deriv:
+                        # If col_deriv is True, transpose the result returned
+                        # by jacfunc1, and continue as if col_deriv was False.
+                        jac = jac.T
+                    # Convert jac to real_jac, an array in which each complex value
+                    # a+i*b in jac is expanded to the 2x2 array [[a, -b], [b, a]].
+                    real_jac = _complex_to_real_jac(jac)
+                    if ml is not None or mu is not None:
+                        # Banded; shift every other column up one.
+                        real_jac = _transform_banded_jac(real_jac)
+                    return real_jac
 
             jacfunc2 = jacfuncz
         else:

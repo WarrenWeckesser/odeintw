@@ -15,6 +15,12 @@ _scipy_version = tuple(int(n) for n in scipy.__version__.split('.')[:3])
 _banded_bug_msg = "known bug in scipy.integrate.odeint for scipy versions before 0.14.0"
 
 
+C = np.array([[-20+1j, 5-1j,      0,       0],
+              [     0, -0.1,  1+2.5j,      0],
+              [     0,    0,      -1,    0.5],
+              [     0,    0,       0,  -5+10j]])
+
+
 def test_complex_to_real_jac():
     z = np.array([[1+2j]])
     r = _complex_to_real_jac(z)
@@ -47,6 +53,7 @@ def test_transform_banded_jac():
 def system1_complex(z, t):
     return z * (1 - z)
 
+
 def system1_real(z, t):
     x, y = z
     return [x*(1-x) + y**2, y - 2*x*y]
@@ -64,9 +71,11 @@ def test_odeintw_complex():
 def system2_array(a, t):
     return -a.T
 
+
 def system2_vector(a, t):
     a11, a12, a21, a22 = a
     return [-a11, -a21, -a12, -a22]
+
 
 def test_odeint_array():
     t = np.linspace(0, 1, 5)
@@ -93,19 +102,16 @@ def system3_funcz(y, t, c):
 def system3_jac(y, t, c):
     return c
 
+
 def system3_bjac_cols(y, t, c):
     return np.column_stack( (np.r_[0, np.diag(c, 1)], np.diag(c)) )
+
 
 def system3_bjac_rows(y, t, c):
     return np.row_stack( (np.r_[0, np.diag(c, 1)], np.diag(c)) )
 
 
 def test_system3():
-    c = np.array([[-20+1j, 5-1j,      0,       0], 
-                  [     0, -0.1,  1+2.5j,      0],
-                  [     0,    0,      -1,    0.5],
-                  [     0,    0,       0,  -5+10j]])
-
     z0 = np.arange(1,5.0) + 0.5j
 
     t = np.linspace(0, 250, 11)
@@ -114,12 +120,12 @@ def test_system3():
                          mxstep=1000)
 
     sol0, info0 = odeintw(system3_funcz, z0, t, Dfun=system3_jac,
-                          args=(c,), **common_kwargs)
+                          args=(C,), **common_kwargs)
     nje0 = info0['nje']
 
     x0 = z0.view(np.float64)
     sol1, info1 = odeint(system3_func, x0, t, Dfun=system3_jac,
-                         args=(_complex_to_real_jac(c),), **common_kwargs)
+                         args=(_complex_to_real_jac(C),), **common_kwargs)
     nje1 = info1['nje']
 
     # Using assert_array_equal here is risky.  The system definitions have
@@ -156,6 +162,57 @@ def test_system3_banded():
     # sol1 and sol2, so the number of jacobian evaluations should
     # be the same.
     yield assert_array_equal, info1['nje'], info2['nje']
+
+
+def system1_complex_tfirst(t, z):
+    return z * (1 - z)
+
+
+def test_tfirst_system1():
+    z0 = 0.25 + 0.5j
+    t = np.linspace(0, 1, 5)
+    sol_zfirst = odeintw(system1_complex, z0, t)
+    sol_tfirst = odeintw(system1_complex_tfirst, z0, t, tfirst=True)
+    assert_allclose(sol_tfirst, sol_zfirst)
+
+
+def system3_func_tfirst(t, y, c):
+    return c.dot(y)
+
+
+def system3_jac_tfirst(t, y, c):
+    return c
+
+
+def test_system3_tfirst():
+    z0 = np.array([1.0, 2+3j, -4j, 5])
+    t = np.linspace(0, 250, 11)
+    common_kwargs = dict(atol=1e-12, rtol=1e-10, mxstep=1000)
+
+    sol = odeintw(system3_func, z0, t, Dfun=system3_jac,
+                  args=(C,), **common_kwargs)
+    sol_tfirst = odeintw(system3_func_tfirst, z0, t, Dfun=system3_jac_tfirst,
+                  args=(C,), tfirst=True, **common_kwargs)
+    assert_allclose(sol, sol_tfirst)
+
+
+def test_complex_simple_scalar_integration():
+    # The exact solution is z0 + k*t**2
+
+    def sys(z, t, k):
+        return 2*k*t
+
+    def sys_tfirst(t, z, k):
+        return 2*k*t
+
+    k = 3
+    z0 = 1+2j,
+    t = np.array([0, 0.5, 1])
+    sol = odeintw(sys, z0, t, args=(k,))
+    assert_allclose(sol, z0 + k*t.reshape(-1, 1)**2)
+
+    sol = odeintw(sys_tfirst, z0, t, args=(k,), tfirst=True)
+    assert_allclose(sol, z0 + k*t.reshape(-1, 1)**2)
 
 
 if __name__ == "__main__":
