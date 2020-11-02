@@ -4,7 +4,7 @@
 
 import numpy as np
 from numpy.testing import (assert_allclose, assert_array_equal,
-                           assert_, dec, run_module_suite)
+                           dec, run_module_suite)
 import scipy
 from scipy.integrate import odeint
 from odeintw._odeintw import (_complex_to_real_jac, _transform_banded_jac,
@@ -12,7 +12,8 @@ from odeintw._odeintw import (_complex_to_real_jac, _transform_banded_jac,
 
 
 _scipy_version = tuple(int(n) for n in scipy.__version__.split('.')[:3])
-_banded_bug_msg = "known bug in scipy.integrate.odeint for scipy versions before 0.14.0"
+_banded_bug_msg = ("known bug in scipy.integrate.odeint for scipy versions "
+                   "before 0.14.0")
 
 
 C = np.array([[-20+1j, 5-1j,      0,       0],
@@ -35,7 +36,7 @@ def test_complex_to_real_jac():
     assert_array_equal(r, expected)
 
 
-@dec.knownfailureif(_scipy_version < (0, 14, 0), _banded_bug_msg) 
+@dec.knownfailureif(_scipy_version < (0, 14, 0), _banded_bug_msg)
 def test_transform_banded_jac():
     j = np.array([[0,  0,  1,  2],
                   [0,  0,  3,  4],
@@ -104,15 +105,15 @@ def system3_jac(y, t, c):
 
 
 def system3_bjac_cols(y, t, c):
-    return np.column_stack( (np.r_[0, np.diag(c, 1)], np.diag(c)) )
+    return np.column_stack((np.r_[0, np.diag(c, 1)], np.diag(c)))
 
 
 def system3_bjac_rows(y, t, c):
-    return np.row_stack( (np.r_[0, np.diag(c, 1)], np.diag(c)) )
+    return np.row_stack((np.r_[0, np.diag(c, 1)], np.diag(c)))
 
 
 def test_system3():
-    z0 = np.arange(1,5.0) + 0.5j
+    z0 = np.arange(1, 5.0) + 0.5j
 
     t = np.linspace(0, 250, 11)
 
@@ -136,16 +137,16 @@ def test_system3():
     assert_array_equal(nje0, nje1)
 
 
-@dec.knownfailureif(_scipy_version < (0, 14, 0), _banded_bug_msg) 
+@dec.knownfailureif(_scipy_version < (0, 14, 0), _banded_bug_msg)
 def test_system3_banded():
-    c = np.array([[-20+1j, 5-1j,      0,       0], 
+    c = np.array([[-20+1j, 5-1j,      0,       0],
                   [     0, -0.1,  1+2.5j,      0],
                   [     0,    0,      -1,    0.5],
                   [     0,    0,       0,  -5+10j]])
 
     common_kwargs = dict(args=(c,), full_output=True, atol=1e-12, rtol=1e-10,
                          mxstep=1000)
-    z0 = np.arange(1,5.0) + 0.5j
+    z0 = np.arange(1, 5.0) + 0.5j
     t = np.linspace(0, 250, 11)
 
     sol0, info0 = odeintw(system3_func, z0, t, Dfun=system3_jac,
@@ -192,7 +193,7 @@ def test_system3_tfirst():
     sol = odeintw(system3_func, z0, t, Dfun=system3_jac,
                   args=(C,), **common_kwargs)
     sol_tfirst = odeintw(system3_func_tfirst, z0, t, Dfun=system3_jac_tfirst,
-                  args=(C,), tfirst=True, **common_kwargs)
+                         args=(C,), tfirst=True, **common_kwargs)
     assert_allclose(sol, sol_tfirst)
 
 
