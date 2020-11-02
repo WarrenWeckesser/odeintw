@@ -28,6 +28,16 @@ def _check_args(kwargs):
                          (bad_args[0],))
 
 
+def _float64_view_of_complex128(z):
+    """
+    Convert z to a float64 view of a complex128 array.
+
+    Convert z to an array that is at lead 1-d, with type np.complex128,
+    and then return a np.float64 view of that array.
+    """
+    return np.atleast_1d(z).astype(np.complex128).view(np.float64)
+
+
 def _complex_to_real_jac(jac):
     """
     Convert a complex array to a real array with doubled dimensions.
@@ -207,19 +217,17 @@ def odeintw(func, y0, t, **kwargs):
             def realfunc(t, y, *args):
                 z = y.view(np.complex128)
                 dzdt = func1(t, z, *args)
-                # func1 might return a python list, or a scalar, so convert its
-                # return value to an array that is at lead 1-d, with type
-                # np.complex128, and then return a np.float64 view of that array.
-                dydt = np.atleast_1d(dzdt).astype(np.complex128).view(np.float64)
+                # func1 might return a python list, or a scalar, so convert
+                # it to a float64 view of a complex128 array.
+                dydt = _float64_view_of_complex128(dzdt)
                 return dydt
         else:
             def realfunc(y, t, *args):
                 z = y.view(np.complex128)
                 dzdt = func1(z, t, *args)
-                # func1 might return a python list, or a scalar, so convert its
-                # return value to an array that is at lead 1-d, with type
-                # np.complex128, and then return a np.float64 view of that array.
-                dydt = np.atleast_1d(dzdt).astype(np.complex128).view(np.float64)
+                # func1 might return a python list, or a scalar, so convert
+                # it to a float64 view of a complex128 array.
+                dydt = _float64_view_of_complex128(dzdt)
                 return dydt
 
         func2 = realfunc
@@ -234,8 +242,9 @@ def odeintw(func, y0, t, **kwargs):
                         # If col_deriv is True, transpose the result returned
                         # by jacfunc1, and continue as if col_deriv was False.
                         jac = jac.T
-                    # Convert jac to real_jac, an array in which each complex value
-                    # a+i*b in jac is expanded to the 2x2 array [[a, -b], [b, a]].
+                    # Convert jac to real_jac, an array in which each complex
+                    # value a+i*b in jac is expanded to the 2x2 array
+                    # [[a, -b], [b, a]].
                     real_jac = _complex_to_real_jac(jac)
                     if ml is not None or mu is not None:
                         # Banded; shift every other column up one.
@@ -249,8 +258,9 @@ def odeintw(func, y0, t, **kwargs):
                         # If col_deriv is True, transpose the result returned
                         # by jacfunc1, and continue as if col_deriv was False.
                         jac = jac.T
-                    # Convert jac to real_jac, an array in which each complex value
-                    # a+i*b in jac is expanded to the 2x2 array [[a, -b], [b, a]].
+                    # Convert jac to real_jac, an array in which each complex
+                    # value  a+i*b in jac is expanded to the 2x2 array
+                    # [[a, -b], [b, a]].
                     real_jac = _complex_to_real_jac(jac)
                     if ml is not None or mu is not None:
                         # Banded; shift every other column up one.

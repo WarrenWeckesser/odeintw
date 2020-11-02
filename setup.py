@@ -61,5 +61,4 @@ setup(name='odeintw',
           "Operating System :: OS Independent",
       ],
       keywords="scipy odeint",
-      install_requires=['scipy'],
-)
+      install_requires=['scipy'])
