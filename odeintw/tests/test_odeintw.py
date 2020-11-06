@@ -3,8 +3,7 @@
 # See the LICENSE file for license information.
 
 import numpy as np
-from numpy.testing import (assert_allclose, assert_array_equal,
-                           dec, run_module_suite)
+from numpy.testing import assert_allclose, assert_array_equal
 import scipy
 from scipy.integrate import odeint
 from odeintw._odeintw import (_complex_to_real_jac, _transform_banded_jac,
@@ -36,7 +35,6 @@ def test_complex_to_real_jac():
     assert_array_equal(r, expected)
 
 
-@dec.knownfailureif(_scipy_version < (0, 14, 0), _banded_bug_msg)
 def test_transform_banded_jac():
     j = np.array([[0,  0,  1,  2],
                   [0,  0,  3,  4],
@@ -137,7 +135,6 @@ def test_system3():
     assert_array_equal(nje0, nje1)
 
 
-@dec.knownfailureif(_scipy_version < (0, 14, 0), _banded_bug_msg)
 def test_system3_banded():
     c = np.array([[-20+1j, 5-1j,      0,       0],
                   [     0, -0.1,  1+2.5j,      0],
@@ -214,7 +211,3 @@ def test_complex_simple_scalar_integration():
 
     sol = odeintw(sys_tfirst, z0, t, args=(k,), tfirst=True)
     assert_allclose(sol, z0 + k*t.reshape(-1, 1)**2)
-
-
-if __name__ == "__main__":
-    run_module_suite()

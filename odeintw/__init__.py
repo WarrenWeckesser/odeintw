@@ -7,6 +7,6 @@ from numpy.testing import Tester as _Tester
 from ._odeintw import odeintw
 
 
-__version__ = "0.1.2.dev2"
+__version__ = "0.1.2.dev3"
 
 test = _Tester().test

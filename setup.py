@@ -42,7 +42,8 @@ equations of the form
 where `t` is real and `Z` is a real or complex array.
 
 Since `odeintw` is just a wrapper of `scipy.integrate.odeint`, it requires
-`scipy` to be installed.
+`scipy` to be installed.  SciPy 0.15 or greater is required, to avoid a
+bug in older in `odeint` in older versions of SciPy.
 
 See README.md at https://github.com/WarrenWeckesser/odeintw for examples.
 """
@@ -53,7 +54,7 @@ setup(name='odeintw',
       long_description=_long_descr,
       author='Warren Weckesser',
       url='https://github.com/WarrenWeckesser/odeintw',
-      packages=['odeintw', 'odeintw.tests'],
+      packages=['odeintw'],
       classifiers=[
           "Programming Language :: Python :: 2.7",
           "Programming Language :: Python :: 3",
