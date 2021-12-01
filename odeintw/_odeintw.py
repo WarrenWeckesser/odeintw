@@ -164,7 +164,7 @@ def odeintw(func, y0, t, **kwargs):
 
         # Flatten y0, and create a wrapper for func that can be used
         # by odeint.
-        y0 = y0.ravel()
+        y0 = np.asarray(y0).reshape(-1)
 
         if tfirst:
             def vecfunc(t, y, *args):
