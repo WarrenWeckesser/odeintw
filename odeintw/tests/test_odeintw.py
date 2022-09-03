@@ -2,6 +2,7 @@
 # All rights reserved.
 # See the LICENSE file for license information.
 
+import warnings
 import numpy as np
 from numpy.testing import assert_allclose, assert_array_equal
 import scipy
@@ -211,3 +212,20 @@ def test_complex_simple_scalar_integration():
 
     sol = odeintw(sys_tfirst, z0, t, args=(k,), tfirst=True)
     assert_allclose(sol, z0 + k*t.reshape(-1, 1)**2)
+
+
+def test_matrix_y0():
+    # Regression test for gh-8.
+
+    def sys(x, t):
+        return -x
+
+    # The numpy.matrix class is deprecated, so this use of matrix will generate
+    # a warning with recent versions of NumPy.  When the matrix class is
+    # removed from numpy, this entire test can be removed.
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", PendingDeprecationWarning)
+        y0 = np.matrix([[0, 2], [3, 1]])
+        t = np.array([0, 0.5, 1])
+        sol = odeintw(sys, y0, t, rtol=1e-12)
+        assert_allclose(sol, np.asarray(y0)*np.exp(-t.reshape((len(t), 1, 1))))

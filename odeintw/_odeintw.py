@@ -152,7 +152,7 @@ def odeintw(func, y0, t, **kwargs):
     tfirst = kwargs.get('tfirst', False)
     Dfun = kwargs.pop('Dfun', None)
 
-    y0 = np.atleast_1d(y0)
+    y0 = np.atleast_1d(np.asarray(y0))
     shape = y0.shape
 
     if y0.ndim == 1:
