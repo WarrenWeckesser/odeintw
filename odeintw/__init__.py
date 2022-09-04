@@ -6,4 +6,4 @@
 from ._odeintw import odeintw
 
 
-__version__ = "0.1.2.dev3"
+__version__ = "1.0.0"
