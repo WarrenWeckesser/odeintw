@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         python-version: ['3.8', '3.9', '3.10', '3.11']
-        scipy-version: ['1.7.3', '1.8.1', '1.9.3', '1.10.1', '1.11.1']
+        scipy-version: ['1.7.3', '1.8.1', '1.9.3', '1.10.1', '1.11.2']
         exclude:
           - scipy-version: '1.11.1'
             python-version: '3.8'
