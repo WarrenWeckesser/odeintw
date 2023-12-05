@@ -43,7 +43,7 @@ where `t` is real and `Z` is a real or complex array.
 
 Since `odeintw` is just a wrapper of `scipy.integrate.odeint`, it requires
 `scipy` to be installed.  SciPy 0.15 or greater is required, to avoid a
-bug in `scipy.stats.odeint` in older versions of SciPy.
+bug in `scipy.integrate.odeint` in older versions of SciPy.
 
 See README.md at https://github.com/WarrenWeckesser/odeintw for examples.
 """
