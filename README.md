@@ -71,7 +71,7 @@ The components of the solution can be plotted with `matplotlib` as follows
 
 Plot:
 
-![](https://github.com/WarrenWeckesser/odeintw/blob/master/examples/odeintw_example1.png)
+![](https://github.com/WarrenWeckesser/odeintw/blob/main/examples/odeintw_example1.png)
 
 
 Example 2
@@ -145,7 +145,7 @@ The solution can be plotted with `matplotlib`:
 
 Plot:
 
-![](https://github.com/WarrenWeckesser/odeintw/blob/master/examples/odeintw_example2.png)
+![](https://github.com/WarrenWeckesser/odeintw/blob/main/examples/odeintw_example2.png)
 
 
 *Copyright (c) 2015, Warren Weckesser*
