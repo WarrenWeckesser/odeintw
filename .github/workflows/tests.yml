@@ -68,7 +68,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install numpy=${{ numpy-version }} scipy==${{ matrix.scipy-version }}
+        python -m pip install numpy=${{ matrix.numpy-version }} scipy==${{ matrix.scipy-version }}
         python -m pip install pytest
     - name: Install odeintw
       run: |
