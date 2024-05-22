@@ -33,7 +33,7 @@ def bjac_cols(y, t, c):
 
 
 def bjac_rows(y, t, c):
-    return np.row_stack((np.r_[0, np.diag(c, 1)], np.diag(c)))
+    return np.vstack((np.r_[0, np.diag(c, 1)], np.diag(c)))
 
 
 c = np.array([[-20+1j, 5-1j,      0,       0],

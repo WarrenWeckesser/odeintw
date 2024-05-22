@@ -108,7 +108,7 @@ def system3_bjac_cols(y, t, c):
 
 
 def system3_bjac_rows(y, t, c):
-    return np.row_stack((np.r_[0, np.diag(c, 1)], np.diag(c)))
+    return np.vstack((np.r_[0, np.diag(c, 1)], np.diag(c)))
 
 
 def test_system3():
