@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright (c) 2014, Warren Weckesser
+# Copyright (c) 2014, 2024 Warren Weckesser
 # All rights reserved.
 # See the LICENSE file for license information.
 
