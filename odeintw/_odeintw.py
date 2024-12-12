@@ -1,4 +1,4 @@
-# Copyright (c) 2014, Warren Weckesser
+# Copyright (c) 2014-2024, Warren Weckesser
 # All rights reserved.
 # See the LICENSE file for license information.
 
@@ -146,6 +146,68 @@ def odeintw(func, y0, t, **kwargs):
     Complex array equations are handled, but to use `Dfun`, the same
     requirement on the complex differentiability of the components
     holds.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from odeintw import odeintw
+
+    To solve the equations
+
+        dz1/dt = -z1 * (K - z2)
+        dz2/dt = L - M*z2
+
+    where `K`, `L` and `M` are (possibly complex) constants, we first define the
+    right-hand-side of the differential equations:
+
+    >>> def zfunc(z, t, K, L, M):
+    ...     z1, z2 = z
+    ...     return [-z1 * (K - z2), L - M*z2]
+    ...
+
+    The Jacobian is
+
+    >>> def zjac(z, t, K, L, M):
+    ...     z1, z2 = z
+    ...     jac = np.array([[z2 - K, z1], [0, -M]])
+    ...     return jac
+    ...
+
+    In the following, the parameters are set up and then `odeintw` is called.
+
+    Initial conditions:
+
+    >>> z0 = np.array([1+2j, 3+4j])
+
+    Desired time samples for the solution:
+
+    >>> t = np.linspace(0, 5, 101)
+
+    Parameters:
+
+    >>> K = 2
+    >>> L = 4 - 2j
+    >>> M = 2.5
+
+    Call odeintw:
+
+    >>> z, infodict = odeintw(zfunc, z0, t, args=(K, L, M), Dfun=zjac,
+    ...                       full_output=True)
+
+    >>> infodict['message']
+    'Integration successful.'
+    >>> z.shape
+    (101, 2)
+    >>> z[:8]
+    array([[ 1.        +2.j        ,  3.        +4.j        ],
+           [ 0.64250445+2.25096394j,  2.83549567+3.43598514j],
+           [ 0.28855726+2.41451832j,  2.6903211 +2.93824376j],
+           [-0.04203931+2.50852914j,  2.56220499+2.49898854j],
+           [-0.33817133+2.55065235j,  2.44914292+2.11134717j],
+           [-0.59492676+2.55640268j,  2.349366  +1.76925486j],
+           [-0.81147183+2.53842304j,  2.26131317+1.46735946j],
+           [-0.98943417+2.50644643j,  2.18360683+1.2009377j ]])
+
     """
 
     full_output = kwargs.get('full_output', False)
