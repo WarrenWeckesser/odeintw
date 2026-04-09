@@ -23,9 +23,8 @@ def _check_args(kwargs):
     _unsupported_odeint_args = ['col_deriv', 'ml', 'mu']
     bad_args = [arg for arg in kwargs if arg in _unsupported_odeint_args]
     if len(bad_args) > 0:
-        raise ValueError("The odeint argument %r is not supported by "
-                         "odeintw for array differential equations." %
-                         (bad_args[0],))
+        raise ValueError(f"The odeint argument {bad_args[0]!r} is not supported "
+                         "by odeintw for array differential equations.")
 
 
 def _float64_view_of_complex128(z):

@@ -50,11 +50,11 @@ def test_transform_banded_jac():
     assert_array_equal(t, expected)
 
 
-def system1_complex(z, t):
+def system1_complex(z, _t):
     return z * (1 - z)
 
 
-def system1_real(z, t):
+def system1_real(z, _t):
     x, y = z
     return [x*(1-x) + y**2, y - 2*x*y]
 
@@ -68,11 +68,11 @@ def test_odeintw_complex():
     assert_allclose(zv, sol)
 
 
-def system2_array(a, t):
+def system2_array(a, _t):
     return -a.T
 
 
-def system2_vector(a, t):
+def system2_vector(a, _t):
     a11, a12, a21, a22 = a
     return [-a11, -a21, -a12, -a22]
 
@@ -86,11 +86,11 @@ def test_odeint_array():
     assert_allclose(avec, sol)
 
 
-def system3_func(y, t, c):
+def system3_func(y, _t, c):
     return c.dot(y)
 
 
-def system3_funcz(y, t, c):
+def system3_funcz(y, _t, c):
     # Same calculation as `system3_func`, but computed using real arrays,
     # so the calculation in `dot` should follow the same code path for
     # both the real and complex examples below.
@@ -99,15 +99,15 @@ def system3_funcz(y, t, c):
     return dydt.view(np.complex128)
 
 
-def system3_jac(y, t, c):
+def system3_jac(_y, _t, c):
     return c
 
 
-def system3_bjac_cols(y, t, c):
+def system3_bjac_cols(_y, _t, c):
     return np.column_stack((np.r_[0, np.diag(c, 1)], np.diag(c)))
 
 
-def system3_bjac_rows(y, t, c):
+def system3_bjac_rows(_y, _t, c):
     return np.vstack((np.r_[0, np.diag(c, 1)], np.diag(c)))
 
 
@@ -147,8 +147,8 @@ def test_system3_banded():
     z0 = np.arange(1, 5.0) + 0.5j
     t = np.linspace(0, 250, 11)
 
-    sol0, info0 = odeintw(system3_func, z0, t, Dfun=system3_jac,
-                          **common_kwargs)
+    sol0, _info0 = odeintw(system3_func, z0, t, Dfun=system3_jac,
+                           **common_kwargs)
 
     sol1, info1 = odeintw(system3_func, z0, t, Dfun=system3_bjac_cols,
                           ml=0, mu=1, col_deriv=True, **common_kwargs)
@@ -163,7 +163,7 @@ def test_system3_banded():
     assert_array_equal(info1['nje'], info2['nje'])
 
 
-def system1_complex_tfirst(t, z):
+def system1_complex_tfirst(_t, z):
     return z * (1 - z)
 
 
@@ -175,11 +175,11 @@ def test_tfirst_system1():
     assert_allclose(sol_tfirst, sol_zfirst)
 
 
-def system3_func_tfirst(t, y, c):
+def system3_func_tfirst(_t, y, c):
     return c.dot(y)
 
 
-def system3_jac_tfirst(t, y, c):
+def system3_jac_tfirst(_t, _y, c):
     return c
 
 
@@ -198,14 +198,14 @@ def test_system3_tfirst():
 def test_complex_simple_scalar_integration():
     # The exact solution is z0 + k*t**2
 
-    def sys(z, t, k):
+    def sys(_z, t, k):
         return 2*k*t
 
-    def sys_tfirst(t, z, k):
+    def sys_tfirst(t, _z, k):
         return 2*k*t
 
     k = 3
-    z0 = 1+2j,
+    z0 = 1+2j
     t = np.array([0, 0.5, 1])
     sol = odeintw(sys, z0, t, args=(k,))
     assert_allclose(sol, z0 + k*t.reshape(-1, 1)**2)
@@ -217,7 +217,7 @@ def test_complex_simple_scalar_integration():
 def test_matrix_y0():
     # Regression test for gh-8.
 
-    def sys(x, t):
+    def sys(x, _t):
         return -x
 
     # The numpy.matrix class is deprecated, so this use of matrix will generate
